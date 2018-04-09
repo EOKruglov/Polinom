@@ -10,6 +10,7 @@ namespace Polinom {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
+
 	/// <summary>
 	/// Summary for MyForm
 	/// </summary>
@@ -17,8 +18,10 @@ namespace Polinom {
 	{
 	public:
 
-		TPolinom *t1, *t2, *res;
-		TMonom *m;
+		TPolinom *t1 = new TPolinom, 
+			*t2 = new TPolinom, 
+			*res = new TPolinom;
+		TMonom *m = new TMonom;
 		//int x, y, z;
 		//double coeff;
 		MyForm(void)
@@ -204,7 +207,22 @@ private: System::Void button1_Click(System::Object^  sender, System::EventArgs^ 
 	m->z = Convert::ToInt32(textBox5->Text);
 
 	t1->InsByOrder(*m);
-	string prt;
+
+	textBox1->Text = " ";
+
+	for (t1->reset(); !t1->IsEnd(); t1->goNext())
+	{
+		if (t1->GetEl().coeff != 0)
+		{
+			textBox1->Text += t1->GetEl().coeff +
+				" * x^" + t1->GetEl().x +
+				" * y^" + t1->GetEl().y +
+				" * z^" + t1->GetEl().z;
+
+			if (!t1->IsLast())
+				textBox1->Text += " + ";
+		}
+	}
 
 	
 }

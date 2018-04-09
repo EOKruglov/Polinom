@@ -21,3 +21,4 @@ Class Polinom.MyForm: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     TPolinom* t1 : Public
     TPolinom* t2 : Public
     TPolinom* res : Public
+    TMonom* m : Public

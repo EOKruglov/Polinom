@@ -358,7 +358,15 @@ public:
 		return true;
 	}
 
-	 string TPrint(TMonom& tm) {
+
+	bool IsLast()
+	{
+		return this->pCurr == this->pLast;
+	}
+
+
+
+	 /*string TPrint(TMonom& tm) {
 
 		int _x, _y, _z;
 		double _coeff;
@@ -383,17 +391,17 @@ public:
 	}
 
 
-	string TPrint(TPolinom& tp)
+	string TPrint()
 	{
 		string tprint;
 
-		for (tp.reset(); !tp.IsEnd(); tp.goNext())
+		for (reset(); !IsEnd(); goNext())
 		{
-			tprint += TPrint(tp.pCurr->value);
+			tprint += TPrint(pCurr->value);
 		}
 		
 		return tprint;
-	}
+	}*/
 
 
 

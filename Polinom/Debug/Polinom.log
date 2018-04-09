@@ -1,6 +1,5 @@
 ﻿  MyForm.cpp
-d:\vstudio\git\polinom\polinom\tpolinom.h(183): warning C4715: operator<: значение возвращается не при всех путях выполнения
-d:\vstudio\git\polinom\polinom\tpolinom.h(203): warning C4715: operator>: значение возвращается не при всех путях выполнения
-  .NETFramework,Version=v4.5.2.AssemblyAttributes.cpp
+d:\vstudio\git\polinom\polinom\tpolinom.h(184): warning C4715: operator<: значение возвращается не при всех путях выполнения
+d:\vstudio\git\polinom\polinom\tpolinom.h(204): warning C4715: operator>: значение возвращается не при всех путях выполнения
   Polinom.vcxproj -> D:\Vstudio\Git\Polinom\Polinom\Debug\Polinom.exe
   Polinom.vcxproj -> D:\Vstudio\Git\Polinom\Polinom\Debug\Polinom.pdb (Full PDB)
