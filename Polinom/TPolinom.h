@@ -8,85 +8,106 @@ using namespace std;
 
 template <class T>
 struct TLink {
-	T value;
-	TLink* pNext;
+	T val;
+	TLink *pNext;
 };
-
 template <class T>
 class TList {
 protected:
-	TLink <T> *pFirst, *pLast, *pPrev, *pCurr, *pStop;
+	TLink<T> *pFirst, *pLast, *pPrev, *pCurr, *pStop;
 	int size, pos;
 public:
-	TList() {
-		pFirst = pLast = pPrev = pCurr = pStop = NULL;
+	TList()
+	{
+		pFirst = pLast = pCurr = pStop = NULL;
 		size = 0;
 		pos = -1;
 	}
+	void sortInput(T a)
+	{
+		if (pFirst == pStop || a<pFirst->val)
+		{
+			addFirst(a);
+			pCurr = pPrev = pFirst;
+			return;
+		}
 
-	virtual void InsFirst(T el) {
-		TLink<T> *tmp = new TLink<T>;
-		tmp->value = el;
-		if (size == 0) {
+		if (a >= pLast->val)
+		{
+			addLast(a);
+			for (reset(); !(pCurr->pNext == pStop); goNext()) {}
+			return;
+		}
+		for (reset(); !isEnd(); goNext()) {
+			if (pCurr->val>a) { addCurr(a); return; }
+		}
+
+
+
+	}
+
+	virtual void addFirst(T a)
+	{
+		TLink<T> *tmp = new TLink <T>;
+
+		tmp->val = a;
+
+		if (size == 0)
+		{
 			pFirst = pLast = pCurr = tmp;
 			tmp->pNext = pStop;
 		}
-		else {
+		else
+		{
 			tmp->pNext = pFirst;
 			pFirst = tmp;
+			if (size == 1) pPrev = pFirst;
 		}
+
 		pos++;
 		size++;
 	}
 
-	virtual void InsCurr(T el) {
-		if (pFirst == pCurr)
-			InsFirst(el);
-		else {
-			TLink <T> *tmp = new TLink<T>;
-			tmp->value = el;
+	void addCurr(T a)
+	{
+		if (pFirst == pCurr) addFirst(a);
+		else
+		{
+
+			TLink<T> *tmp = new TLink<T>;
+			tmp->val = a;
 			tmp->pNext = pCurr;
 			pPrev->pNext = tmp;
 			pCurr = tmp;
 			size++;
 		}
+
 	}
 
-	virtual void InsLast(T el) {
-		if (pFirst == pStop)
-			InsFirst(el);
+	void addLast(T a)
+	{
+		if (pFirst == NULL) addFirst(a);
 		else {
 			TLink<T> *tmp = new TLink<T>;
-			tmp->value = el;
+			tmp->val = a;
 			pLast->pNext = tmp;
 			tmp->pNext = pStop;
 			pLast = tmp;
 			size++;
 		}
+
 	}
 
-	T GetEl() {
-		return pCurr->value;
+	T getElem()
+	{
+		if (pCurr != 0)
+			return pCurr->val;
 	}
 
-	void reset() {
-		pCurr = pFirst;
-		pos = 0;
-		pPrev = pStop;
-	}
-
-	void goNext() {
-		if (pFirst->pNext == pStop)
-			pPrev = pFirst;
-		else {
-			pPrev = pCurr;
-			pCurr = pCurr->pNext;
-			pos++;
-		}
-	}
-
-	virtual void DelFirst() {
-		if (size == 1) {
+	void delFirst()
+	{
+		if (size == 1)
+		{
 			delete pFirst;
 			pFirst = pLast = pPrev = pCurr = pStop;
 		}
@@ -98,312 +119,480 @@ public:
 		}
 		size--;
 		pos--;
-
 	}
 
-	virtual void DelCurr() {
+	void delCurr()
+	{
 		if (pCurr == pFirst)
-			DelFirst();
-		else {
+
+			delFirst();
+
+		else
+		{
 			pCurr = pCurr->pNext;
 			delete pPrev->pNext;
 			pPrev->pNext = pCurr;
 			size--;
+
 		}
 	}
 
-	virtual void DelLast() {
-		if (pLast == pFirst)
-			DelFirst();
-		else {
-			for (reset(); !(pCurr->pNext == pStop); goNext()) {}
+	void delLast()
+	{
+		if (pLast == pFirst) delFirst();
+		else
+		{
+			for (reset(); !(pCurr == pLast); goNext()) {}
 			delete pLast;
 			pLast = pCurr = pPrev;
-			reset();
+			pLast->pNext = pStop;
 			size--;
 			pos--;
 		}
 	}
 
-	bool IsEnd() {
+	void reset()
+	{
+		pPrev = pCurr = pFirst;
+		pos = 0;
+	}
+
+	void goNext()
+	{
+		pPrev = pCurr;
+		pCurr = pCurr->pNext;
+		pos++;
+
+	}
+
+	bool isEnd()
+	{
 		return pCurr == pStop;
 	}
 
-	bool IsEmpty() {
-		return pFirst == pStop;
+	bool isStart()
+	{
+		return pCurr == pFirst;
 	}
 
-	T operator[](int poz) {
-		for (reset(); !IsEnd(); goNext()) {
+	bool isEmpty()
+	{
+		return pFirst == NULL;
+	}
+
+	T operator[](int m)
+	{
+		for (reset(); !isEnd(); goNext()) {
 			if (pos == m - 1)
-				return pCurr->value;
+				return pCurr->val;
 		}
 	}
 
-	void Sort(T el) {
-		if (pFirst == pStop || el < pFirst->value) {
-			InsFirst(el);
-			return;
-		}
-		if (el >= pLast->value) {
-			InsLast(el);
-			return;
-		}
-		for (reset(); !IsEnd(); goNext()) {
-			if (pCurr->value > el) {
-				InsCurr(el);
-				return;
-			}
-		}
+	~TList()
+	{
+		int listsize = size;
+		for (int i = 0; i<listsize; i++)
+			delFirst();
 	}
-
 };
-
-struct TMonom {
-	double coeff;
-	int x, y, z;
-};
-
-bool operator <(const TMonom& t1, const TMonom& t2) {
-	if (t1.x < t2.x)
-		return true;
-	if (t1.x > t2.x)
-		return false;
-	if (t1.x == t2.x) {
-		if (t1.y < t2.y)
-			return true;
-		if (t1.y > t2.y)
-			return false;
-		if (t1.y == t2.y) {
-			if (t1.z < t2.z)
-				return true;
-			if (t1.z >= t2.z)
-				return false;
-		}
-	}
-}
-
-
-bool operator >(const TMonom& t1, const TMonom& t2) {
-	if (t1.x < t2.x)
-		return false;
-	if (t1.x > t2.x)
-		return true;
-	if (t1.x == t2.x) {
-		if (t1.y < t2.y)
-			return false;
-		if (t1.y > t2.y)
-			return true;
-		if (t1.y == t2.y) {
-			if (t1.z <= t2.z)
-				return false;
-			if (t1.z > t2.z)
-				return true;
-		}
-	}
-}
-
-bool operator ==(const TMonom& t1, const TMonom& t2) {
-	if (t1.x == t2.x)
-		if (t1.y == t2.y)
-			if (t1.z == t2.z)
-				return true;
-			else
-				return false;
-		else
-			return false;
-	else
-		return false;
-}
-
-bool operator !=(const TMonom& t1, const TMonom& t2) {
-	if (t1.x == t2.x)
-		if (t1.y == t2.y)
-			if (t1.z == t2.z)
-				return false;
-			else
-				return true;
-		else
-			return true;
-	else
-		return true;
-}
-
 
 
 template <class T>
 class THeadList :public TList<T> {
-protected:
-	TLink<T> *pHead;
+protected: TLink<T> *pHead;
 public:
-	THeadList() :TList() {
-		pHead = new TLink<T>;
-		pStop = pHead;
-		pHead->pNext = pHead;
-	}
+	THeadList() :TList()
+	{
+		TLink<T> *tmp = new TLink<T>;
 
-	~THeadList() {
-		TList::~TList();
+		pHead = tmp;
+		pStop = tmp;
+		tmp->pNext = pStop;
+		size = 0;
+	}
+	~THeadList()
+	{
+		TList<T>::~TList();
 		delete pHead;
 	}
+	void clearList()
+	{
+		TList<T>::~TList();
+	}
+	virtual void delFirst()
+	{
+		if (size == 1)
+		{
+			delete pFirst;
+			pFirst = pLast = pPrev = pCurr = NULL;
+			pHead->pNext = pStop;
+		}
+		else
+		{
+			TLink<T> *tmp = pFirst->pNext;
+			delete pFirst;
+			pFirst = tmp;
+			pHead->pNext = pFirst;
+		}
+		size--;
+		pos--;
+	}
+	virtual void addFirst(T a)
+	{
+		TLink<T> *tmp = new TLink<T>;
 
-	void InsFirst(T a) {
-		TList::InsFirst(a);
+		tmp->val = a;
+
+		if (pFirst == NULL) {
+			tmp->pNext = pStop;
+			pFirst = pLast = tmp;
+			pos = 0;
+		}
+		else {
+			tmp->pNext = pFirst;
+			pFirst = tmp;
+			pos++;
+		}
+
+		size++;
 		pHead->pNext = pFirst;
 	}
 
-	void DelFirst() {
-		pHead->pNext = pFirst;
+
+
+};
+
+
+
+struct TMonom {
+	double coeff;
+	int x, y, z;
+
+	bool operator<(const TMonom &q) {
+		return ((x * 100 + y * 10 + z)<(q.x * 100 + q.y * 10 + q.z));
+	}
+
+	bool operator>(const TMonom &q) {
+		return ((x * 100 + y * 10 + z)>(q.x * 100 + q.y * 10 + q.z));
+	}
+
+	bool operator!=(const TMonom &q) {
+		if ((x * 100 + y * 10 + z) == (q.x * 100 + q.y * 10 + q.z))
+			return (coeff != q.coeff);
+		else return true;
+	}
+
+	bool EqualDegrees(const TMonom &q) {
+		return ((x * 100 + y * 10 + z) == (q.x * 100 + q.y * 10 + q.z));
+	}
+
+	bool operator==(const TMonom &q) {
+		if ((x * 100 + y * 10 + z) == (q.x * 100 + q.y * 10 + q.z))
+			return (coeff == q.coeff);
+		else return false;
+	}
+
+	TMonom operator*(const TMonom &q) {
+		TMonom tmp;
+		tmp.x = q.x + x;
+		tmp.y = q.y + y;
+		tmp.z = q.z + z;
+		tmp.coeff = q.coeff*coeff;
+		return tmp;
+	}
+
+	TMonom& operator=(const TMonom &q) {
+		coeff = q.coeff;
+		x = q.x;
+		y = q.y;
+		z = q.z;
+		return *this;
 	}
 };
 
-class TPolinom :public THeadList<TMonom> {
+ostream& operator<<(ostream& os, const TMonom& m) {
+	if (!m.coeff) { os << "0"; return os; }
+	os << m.coeff;
+	if (m.x) if (m.x>1) os << "x^" << m.x;
+	else  os << "x";
+	if (m.y) if (m.y>1) os << "y^" << m.y;
+	else  os << "y";
+	if (m.z) if (m.z>1) os << "z^" << m.z;
+	else  os << "z";
+	return os;
+}
+
+class TPolynom : public THeadList<TMonom> {
 public:
-	TPolinom() :THeadList() {
-		pHead->value.coeff = 0;
-		pHead->value.z = 1;
+
+	TPolynom() :THeadList() {
+		pHead->val.coeff = 0;
+		pHead->val.x = -1;
 	}
 
-	TPolinom(TMonom *tm, int size) :THeadList() {
-		pHead->value.coeff = 0;
-		pHead->value.z = 1;
-		for (int i = 0; i < size; i++)
-			InsLast(tm[i]);
+	TPolynom(TPolynom &p) :THeadList()
+	{
+		pHead->val.coeff = 0;
+		pHead->val.x = -1;
+
+		if (p.size)
+		{
+			TLink<TMonom> *tmp1 = new TLink<TMonom>;
+			pHead->pNext = tmp1;
+			pFirst = pCurr = tmp1;
+
+			for (p.reset(); !p.isEnd(); p.goNext())
+			{
+				TLink<TMonom> *tmp2 = new TLink<TMonom>;
+				pCurr->val = p.pCurr->val;
+				if (p.pos == p.size - 1) { pLast = pCurr; pLast->pNext = pStop; size = p.size; break; }
+				pCurr->pNext = tmp2;
+				goNext();
+
+			}
+		}
+
 	}
 
-	void InsByOrder(const TMonom& tm) {
-		if (pFirst == pCurr)
-			InsFirst(tm);
-		for (reset(); !IsEnd(); goNext()) {
-			if (this->pCurr->value == tm) {
-				this->pCurr->value.coeff += tm.coeff;
-				if (this->pCurr->value.coeff == 0)
-					DelCurr();
+	TPolynom(const TMonom &m) :THeadList()
+	{
+		TLink<TMonom> *tmp = new TLink<TMonom>;
+
+		tmp->pNext = pStop;
+		tmp->val = m;
+		pHead->pNext = tmp;
+		pFirst = pLast = pCurr = tmp;
+	}
+
+	void sortInput(TMonom a)
+	{
+		if (!size) { addFirst(a); return; }
+		for (reset(); !isEnd(); goNext()) {
+			if (pCurr->val.EqualDegrees(a)) {
+				pCurr->val.coeff += a.coeff;
+				if (!pCurr->val.coeff) delCurr();
 				return;
 			}
-			if (this->pCurr->value < tm) {
-				InsCurr(tm);
+			else  if (pCurr->val<a) {
+				addCurr(a);
 				return;
 			}
 		}
-		InsLast(tm);
+		addLast(a);
 	}
 
-	void operator+=(TPolinom& q) {
-		q.reset();
+	TPolynom(TMonom *mas, int size) :THeadList()
+	{
+		pHead->val.coeff = 0;
+		pHead->val.x = -1;
+
+		for (int i = 0; i<size; i++)
+			sortInput(mas[i]);
+	}
+
+	TPolynom operator+(TPolynom &p)
+	{
+		TPolynom tmp(*this);
+		p.reset();
+
+		for (reset(); !isEnd(); goNext())
+		{
+			for (p.pCurr; (p.pCurr->val>pCurr->val && !p.isEnd()); p.goNext())
+			{
+				tmp.sortInput(p.pCurr->val);
+			}
+		}
+
+		if (isEnd() && !p.isEnd())
+			for (p.pCurr; !p.isEnd(); p.goNext())
+				tmp.sortInput(p.pCurr->val);
+
+		return tmp;
+	}
+
+	void operator += (TPolynom TM)
+	{
+		TM.reset();
 		reset();
-		while (!q.IsEnd() || !IsEnd()) {
-			if (pCurr->value == q.pCurr->value) {
-				pCurr->value.coeff += q.pCurr->value.coeff;
-				if (pCurr->value.coeff == 0) {
-					DelCurr();
-					q.goNext();
+
+		while (!isEnd() || !TM.isEnd())
+		{
+			if (pCurr->val == TM.pCurr->val)
+			{
+				pCurr->val.coeff += TM.pCurr->val.coeff;
+				if (pCurr->val.coeff == 0)
+				{
+					delCurr();
+					TM.goNext();
 				}
-				else {
+				else
+				{
 					goNext();
-					q.goNext();
+					TM.goNext();
 				}
 			}
 			else
-				if (pCurr->value < q.pCurr->value) {
-					InsCurr(q.pCurr->value);
-					q.goNext();
+				if (pCurr->val < TM.pCurr->val)
+				{
+					addCurr(TM.pCurr->val);
+					TM.goNext();
 				}
 				else
 					goNext();
 		}
 	}
 
-	void operator*= (const int& n) {
-		if (n == 0)
-			for (reset(); !IsEnd(); goNext())
-				DelCurr();
-		for (reset(); !IsEnd(); goNext())
-			this->pCurr->value.coeff *= n;
-	}
-
-	void operator*= (const double& n) {
-		if (n == 0)
-			for (reset(); !IsEnd(); goNext())
-				DelCurr();
-		for (reset(); !IsEnd(); goNext())
-			this->pCurr->value.coeff *= n;
-	}
-
-	void operator*= (const TMonom& tm) {
-		for (reset(); !IsEnd(); goNext()) {
-			this->pCurr->value.coeff *= tm.coeff;
-			this->pCurr->value.x += tm.x;
-			this->pCurr->value.y += tm.y;
-			this->pCurr->value.y += tm.y;
-		}
-	}
-
-	void operator*= (TPolinom& tm) {
-		for (tm.reset(); !tm.IsEnd(); tm.goNext())
-			*this *= tm.pCurr->value;
-	}
-
-	bool operator==(TPolinom& tp) {
-		if (this->size != tp.size)
-			return false;
-		tp.reset();
-		reset();
-		while (!IsEnd()) {
-			if (this->pCurr->value != tp.pCurr->value)
-				return false;
-			goNext();
-			tp.goNext();
-		}
-		return true;
-	}
-
-
-	bool IsLast()
+	TPolynom operator-(TPolynom &p)
 	{
-		return this->pCurr == this->pLast;
-	}
+		TPolynom tmp(*this), tmp2(p);
+		tmp2 *= -1;
+		tmp2.reset();
 
-
-
-	 /*string TPrint(TMonom& tm) {
-
-		int _x, _y, _z;
-		double _coeff;
-		string print;
-
-		_x = tm.x;
-		_y = tm.y;
-		_z = tm.z;
-		_coeff = tm.coeff;
-
-		
-		print = to_string(_coeff);
-		print += " * x^";
-		print += to_string(_x);
-		print += " * y^";
-		print += to_string(_y);
-		print += " * z^";
-		print += to_string(_z);
-
-		return print;
-
-	}
-
-
-	string TPrint()
-	{
-		string tprint;
-
-		for (reset(); !IsEnd(); goNext())
+		for (reset(); !isEnd(); goNext())
 		{
-			tprint += TPrint(pCurr->value);
+			for (tmp2.pCurr; (tmp2.pCurr->val>pCurr->val && !tmp2.isEnd()); tmp2.goNext())
+			{
+				tmp.sortInput(tmp2.pCurr->val);
+			}
 		}
-		
-		return tprint;
-	}*/
 
+		if (isEnd() && !tmp2.isEnd())
+			for (tmp2.pCurr; !tmp2.isEnd(); tmp2.goNext())
+				tmp.sortInput(tmp2.pCurr->val);
 
+		return tmp;
+	}
 
+	void operator -= (TPolynom TM)
+	{
+		TM.reset();
+		reset();
 
+		while (!isEnd() || !TM.isEnd())
+		{
+			if (pCurr->val == TM.pCurr->val)
+			{
+				pCurr->val.coeff -= TM.pCurr->val.coeff;
+				if (pCurr->val.coeff == 0)
+				{
+					delCurr();
+					TM.goNext();
+				}
+				else
+				{
+					goNext();
+					TM.goNext();
+				}
+			}
+			else
+				if (pCurr->val < TM.pCurr->val)
+				{
+					addCurr(TM.pCurr->val);
+					TM.goNext();
+				}
+				else
+					goNext();
+		}
+	}
+
+	TPolynom& operator=(TPolynom &p)
+	{
+		pHead->val.coeff = 0;
+		pHead->val.x = -1;
+
+		if (p.size)
+		{
+			TLink<TMonom> *tmp1 = new TLink<TMonom>;
+			pHead->pNext = tmp1;
+			pFirst = pCurr = tmp1;
+
+			for (p.reset(); !p.isEnd(); p.goNext())
+			{
+				TLink<TMonom> *tmp2 = new TLink<TMonom>;
+
+				pCurr->val = p.pCurr->val;
+
+				if (p.pos == p.size - 1)
+				{
+					pLast = pCurr;
+					pLast->pNext = pStop;
+					size = p.size;
+					break;
+				}
+
+				pCurr->pNext = tmp2;
+				goNext();
+			}
+			return *this;
+		}
+	}
+
+	TPolynom operator*(TPolynom &p)
+	{
+		TPolynom tmp;
+
+		for (p.reset(); !p.isEnd(); p.goNext())
+			for (reset(); !isEnd(); goNext()) {
+				tmp.sortInput(pCurr->val*p.pCurr->val);
+			}
+
+		return tmp;
+	}
+
+	void operator*=(double a)
+	{
+		for (reset(); !isEnd(); goNext())
+			pCurr->val.coeff *= a;
+	}
+
+	TPolynom operator*(double a)
+	{
+		TPolynom tmp(*this);
+		for (reset(); !isEnd(); goNext())
+			tmp.pCurr->val.coeff *= a;
+		return tmp;
+	}
+
+	double getCoeff()
+	{
+		return pCurr->val.coeff;
+	}
+
+	int getX()
+	{
+		return pCurr->val.x;
+	}
+
+	int getY()
+	{
+		return pCurr->val.y;
+	}
+
+	int getZ()
+	{
+		return pCurr->val.z;
+	}
+
+	bool isLast()
+	{
+		return pCurr->pNext == pStop;
+	}
+
+	friend ostream& operator<<(ostream& os, TPolynom &p)
+	{
+		if (p.size == 0)
+		{
+			os << "0";
+			return os;
+		}
+
+		for (p.reset(); !p.isEnd(); p.goNext())
+		{
+			if (!p.pos) os << p.pCurr->val;
+			else
+				if (p.pCurr->val.coeff>0) os << "+ " << p.pCurr->val;
+				else os << p.pCurr->val;
+		}
+		return os;
+	}
 };
