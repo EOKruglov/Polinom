@@ -109,7 +109,7 @@ public:
 		if (size == 1)
 		{
 			delete pFirst;
-			pFirst = pLast = pPrev = pCurr = pStop;
+			pFirst = pLast = pPrev = pCurr = pStop = NULL;
 		}
 		else
 		{
@@ -594,5 +594,31 @@ public:
 				else os << p.pCurr->val;
 		}
 		return os;
+	}
+	
+	void InsByOrder(const TMonom &tm)
+	{
+		if (pFirst == NULL)
+		{
+			addFirst(tm);
+			return;
+		}
+		for (reset(); !isEnd(); goNext())
+		{
+			if ((this->pCurr->val == tm) || (this->pCurr->val.x == tm.x)&&
+				(this->pCurr->val.y == tm.y) && (this->pCurr->val.z == tm.z))
+			{
+				this->pCurr->val.coeff += tm.coeff;
+				if (this->pCurr->val.coeff == 0)
+					delCurr();
+				return;
+			}
+			if (this->pCurr->val < tm)
+			{
+				addCurr(tm);
+				return;
+			}
+		}
+		addLast(tm);
 	}
 };

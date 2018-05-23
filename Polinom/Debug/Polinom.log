@@ -1,5 +1,5 @@
 ﻿  MyForm.cpp
-d:\vstudio\git\polinom\polinom\tpolinom.h(105): warning C4715: TList<TMonom>::getElem: значение возвращается не при всех путях выполнения
-d:\vstudio\git\polinom\polinom\tpolinom.h(528): warning C4715: TPolynom::operator=: значение возвращается не при всех путях выполнения
-  Polinom.vcxproj -> D:\Vstudio\Git\Polinom\Polinom\Debug\Polinom.exe
-  Polinom.vcxproj -> D:\Vstudio\Git\Polinom\Polinom\Debug\Polinom.pdb (Full PDB)
+c:\users\эльдорадо\documents\git\polinom\polinom\tpolinom.h(105): warning C4715: 'TList<TMonom>::getElem': not all control paths return a value
+c:\users\эльдорадо\documents\git\polinom\polinom\tpolinom.h(528): warning C4715: 'TPolynom::operator=': not all control paths return a value
+  Polinom.vcxproj -> C:\Users\Эльдорадо\Documents\git\Polinom\Polinom\Debug\Polinom.exe
+  Polinom.vcxproj -> C:\Users\Эльдорадо\Documents\git\Polinom\Polinom\Debug\Polinom.pdb (Full PDB)

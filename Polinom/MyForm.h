@@ -68,6 +68,7 @@ namespace Polinom {
 	private: System::Windows::Forms::Button^  button5;
 	private: System::Windows::Forms::Button^  button6;
 	private: System::Windows::Forms::Button^  button7;
+	private: System::Windows::Forms::Button^  button8;
 
 	private:
 		/// <summary>
@@ -109,6 +110,7 @@ namespace Polinom {
 			this->button5 = (gcnew System::Windows::Forms::Button());
 			this->button6 = (gcnew System::Windows::Forms::Button());
 			this->button7 = (gcnew System::Windows::Forms::Button());
+			this->button8 = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// textBox1
@@ -345,11 +347,22 @@ namespace Polinom {
 			this->button7->UseVisualStyleBackColor = true;
 			this->button7->Click += gcnew System::EventHandler(this, &MyForm::button7_Click);
 			// 
+			// button8
+			// 
+			this->button8->Location = System::Drawing::Point(773, 361);
+			this->button8->Name = L"button8";
+			this->button8->Size = System::Drawing::Size(75, 23);
+			this->button8->TabIndex = 27;
+			this->button8->Text = L"Delete";
+			this->button8->UseVisualStyleBackColor = true;
+			this->button8->Click += gcnew System::EventHandler(this, &MyForm::button8_Click);
+			// 
 			// MyForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(924, 494);
+			this->Controls->Add(this->button8);
 			this->Controls->Add(this->button7);
 			this->Controls->Add(this->button6);
 			this->Controls->Add(this->button5);
@@ -393,7 +406,7 @@ private: System::Void button1_Click(System::Object^  sender, System::EventArgs^ 
 	inp.y = Convert::ToInt32(textBox4->Text);
 	inp.z = Convert::ToInt32(textBox5->Text);
 
-	pol1.addFirst(inp);
+	pol1.InsByOrder(inp);
 
 	textBox1->Text = "";
 
@@ -418,7 +431,7 @@ private: System::Void button3_Click(System::Object^  sender, System::EventArgs^ 
 	inp.y = Convert::ToInt32(textBox9->Text);
 	inp.z = Convert::ToInt32(textBox10->Text);
 
-	pol2.addFirst(inp);
+	pol2.InsByOrder(inp);
 
 	textBox6->Text = "";
 
@@ -496,6 +509,10 @@ private: System::Void button2_Click(System::Object^  sender, System::EventArgs^ 
 private: System::Void button4_Click(System::Object^  sender, System::EventArgs^  e) {
 	pol2.clearList();
 	textBox6->Text = "0";
+}
+private: System::Void button8_Click(System::Object^  sender, System::EventArgs^  e) {
+	res.clearList();
+	textBox11->Text = "0";
 }
 };
 };
